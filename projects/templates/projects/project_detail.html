@@ -1,0 +1,10 @@
+{% extends 'main.html' %}
+{% block title %}{{project.title}} | DPSearch{% endblock title %}
+
+{% block content %}
+<h1>{{project.title}}</h1>
+<p>{{project.description}}</p>
+<p>{{project.vote_ratio}}</p>
+<p>{{project.vote_total}}</p>
+
+{% endblock content %}

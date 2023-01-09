@@ -1,0 +1,13 @@
+{% extends 'main.html' %}
+
+{% block title %}{{object}} | DPSearch{% endblock title %}
+{% block content %}
+
+<p>Are you sure you want to delete {{object}}</p>
+<form action="" method="POST">
+    {% csrf_token %}
+    
+    <button type="submit">Delete</button>
+</form>
+
+{% endblock content %}

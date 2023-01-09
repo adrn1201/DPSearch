@@ -1,10 +1,11 @@
 from django.db import models
 import uuid
+from django.urls import reverse
 
 
 class Project(models.Model):
     title = models.CharField(max_length=255)
-    slug = models.SlugField(max_length=255, unique=True)
+    slug = models.SlugField(max_length=255)
     description = models.TextField(blank=True, null=True)
     demo_link = models.CharField(max_length=2048, null=True, blank=True)
     source_link = models.CharField(max_length=2048, null=True, blank=True)
@@ -19,7 +20,10 @@ class Project(models.Model):
         
     def __str__(self):
         return self.title
-
+    
+    def get_absolute_url(self):
+        return reverse("project-detail", args=[self.slug])
+    
 
 class Tag(models.Model):
     name = models.CharField(max_length=255, null=True, blank=True)
