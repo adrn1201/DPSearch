@@ -6,6 +6,7 @@ from django.urls import reverse
 class Project(models.Model):
     title = models.CharField(max_length=255)
     slug = models.SlugField(max_length=255)
+    featured_image = models.ImageField(null=True, blank=True, default='default.jpg')
     description = models.TextField(blank=True, null=True)
     demo_link = models.CharField(max_length=2048, null=True, blank=True)
     source_link = models.CharField(max_length=2048, null=True, blank=True)
@@ -23,6 +24,14 @@ class Project(models.Model):
     
     def get_absolute_url(self):
         return reverse("project-detail", args=[self.slug])
+    
+    @property
+    def image_url(self):
+        try:
+            url = self.featured_image.url
+        except:
+            url = ''
+        return url
     
 
 class Tag(models.Model):
