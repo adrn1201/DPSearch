@@ -31,6 +31,10 @@ class Profile(models.Model):
         return self.username
     
     
+    def get_absolute_url(self):
+        return reverse("user-profile", args=[self.slug])
+    
+    
     @property
     def image_url(self):
         try:
