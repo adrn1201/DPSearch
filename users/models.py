@@ -7,7 +7,8 @@ from django.urls import reverse
 class Profile(models.Model):
     user = models.OneToOneField(User, on_delete=models.CASCADE, null=True, blank=True)
     slug = models.SlugField(null=True, blank=True)
-    name = models.CharField(max_length=255, null=True, blank=True)
+    first_name = models.CharField(max_length=255, null=True, blank=True)
+    last_name = models.CharField(max_length=255, null=True, blank=True)
     email = models.EmailField(max_length=320, null=True, blank=True)
     username = models.CharField(max_length=255, null=True, blank=True)
     location = models.CharField(max_length=255, null=True, blank=True)
@@ -42,6 +43,11 @@ class Profile(models.Model):
         except:
             url = ''
         return url    
+  
+    
+    @property
+    def get_name(self):
+        return f"{self.first_name} {self.last_name}"
 
 
 class Skill(models.Model):

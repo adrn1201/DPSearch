@@ -12,7 +12,7 @@
                 <div class="card text-center">
                     <div class="card__body dev">
                         <img class="avatar avatar--xl" src="{{ profile.image_url }}" />
-                        <h2 class="dev__name">{{ profile.name }}</h2>
+                        <h2 class="dev__name">{{ profile.get_name|title }}</h2>
                         <p class="dev__title">{{ profile.short_intro }}</p>
                         <p class="dev__location">{{ profile.location }}</p>
                         <ul class="dev__social">

@@ -4,7 +4,7 @@ from django.contrib.auth import login, authenticate, logout
 from django.contrib.auth.models import User
 from .models import Profile
 
-from .forms import CustomUserCreationForm
+from .forms import CustomUserCreationForm, ProfileForm
 
 
 def login_user(request):
@@ -73,3 +73,26 @@ def show_profile(request, slug):
     
     context = {"profile": profile, "top_skills":top_skills, "other_skills":other_skills}
     return render(request, "users/user-profile.html", context)
+
+
+def show_user_account(request):
+    profile = request.user.profile
+    
+    skills = profile.skill_set.all()
+    
+    context = {"profile":profile, "skills":skills}
+    return render(request, "users/account.html", context)
+
+
+def edit_account(request):
+    profile = request.user.profile
+    form = ProfileForm(instance=profile)
+    
+    if request.method == "POST":
+        form = ProfileForm(request.POST, request.FILES, instance=profile)
+        if form.is_valid():
+            form.save()
+            return redirect('account')
+    
+    context = {"form": form}
+    return render(request, "users/edit-account.html", context)

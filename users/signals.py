@@ -20,7 +20,7 @@ def unique_slug_generator(instance, new_slug = None):
     if new_slug is not None: 
         slug = new_slug 
     else: 
-        slug = slugify(instance.name) 
+        slug = slugify(instance.get_name) 
     class_instance = instance.__class__ 
     qs_exists = class_instance.objects.filter(slug = slug).exists() 
       
@@ -40,7 +40,8 @@ def create_profile(sender, instance, created, *args, **kwargs):
             user = user,
             username = user.username,
             email = user.email,
-            name = user.first_name + " " + user.last_name  
+            first_name = user.first_name,
+            last_name = user.last_name  
         )
         
         if not profile.slug:
