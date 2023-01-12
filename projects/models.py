@@ -2,8 +2,10 @@ from django.db import models
 import uuid
 from django.urls import reverse
 
+from users.models import Profile
 
 class Project(models.Model):
+    owner = models.ForeignKey(Profile, null=True, blank=True, on_delete=models.CASCADE)
     title = models.CharField(max_length=255)
     slug = models.SlugField(max_length=255)
     featured_image = models.ImageField(null=True, blank=True, default='default.jpg')
@@ -25,6 +27,12 @@ class Project(models.Model):
     def get_absolute_url(self):
         return reverse("project-detail", args=[self.slug])
     
+    def get_edit_url(self):
+        return reverse("update-project", args=[self.slug])
+    
+    def get_delete_url(self):
+        return reverse("delete-project", args=[self.slug])
+    
     @property
     def image_url(self):
         try:
@@ -35,6 +43,7 @@ class Project(models.Model):
     
 
 class Tag(models.Model):
+    owner = models.ForeignKey(Profile, null=True, blank=True, on_delete=models.CASCADE)
     name = models.CharField(max_length=255, null=True, blank=True)
     created = models.DateTimeField(auto_now_add=True)
     id = models.UUIDField(default=uuid.uuid4, unique=True, primary_key=True, editable=False)

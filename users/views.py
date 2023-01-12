@@ -1,6 +1,7 @@
 from django.shortcuts import render, get_object_or_404, redirect
+from django.contrib.auth.decorators import login_required
 from django.contrib.auth import login, authenticate, logout
-
+from django.contrib import messages
 from django.contrib.auth.models import User
 from .models import Profile
 
@@ -25,13 +26,15 @@ def login_user(request):
         
         if user:
             login(request, user)
-            return redirect('profiles')
+            print(request.GET)
+            return redirect(request.GET['next'] if 'next' in request.GET else 'account')
         else:
             pass
         
     return render(request, "users/login_register.html")
 
 
+@login_required(login_url='login')
 def logout_user(request):
     logout(request)
     return redirect('login')
@@ -50,14 +53,13 @@ def register_user(request):
             
             login(request, user)
             
-            return redirect('profiles')
+            return redirect('edit-account')
         else:
             pass
     
     context = {"page": page, "form" : form}
     return render(request, "users/login_register.html", context)
     
-
 
 def index(request):
     profiles = Profile.objects.all()
@@ -75,15 +77,18 @@ def show_profile(request, slug):
     return render(request, "users/user-profile.html", context)
 
 
+@login_required(login_url='login')
 def show_user_account(request):
     profile = request.user.profile
     
     skills = profile.skill_set.all()
+    projects = profile.project_set.all()
     
-    context = {"profile":profile, "skills":skills}
+    context = {"profile":profile, "skills":skills, "projects":projects}
     return render(request, "users/account.html", context)
 
 
+@login_required(login_url='login')
 def edit_account(request):
     profile = request.user.profile
     form = ProfileForm(instance=profile)
