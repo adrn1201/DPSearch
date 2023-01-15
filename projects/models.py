@@ -41,7 +41,48 @@ class Project(models.Model):
             url = ''
         return url
     
+    
+    @property
+    def reviewers(self):
+        queryset = self.review_set.all().values_list('owner__id', flat=True)
+        return queryset
+    
+    
+    @property
+    def get_vote_count(self):
+        reviews = self.review_set.all()
+        up_votes = reviews.filter(value='up').count()
+        total_votes = reviews.count()
+        
+        ratio = (up_votes / total_votes) * 100
+        self.vote_total = total_votes
+        self.vote_ratio = ratio
+        self.save()
+    
+    
+class Review(models.Model):
+    VOTE_TYPE = (
+        ('up', 'Up Vote'),
+        ('down', 'Down Vote')
+    )
+    
+    owner = models.ForeignKey(Profile, null=True, on_delete=models.CASCADE)
+    project = models.ForeignKey(Project, on_delete=models.CASCADE)
+    value = models.CharField(max_length=255, choices=VOTE_TYPE)
+    body = models.TextField(blank=True, null=True)
+    created = models.DateTimeField(auto_now_add=True)
+    id = models.UUIDField(default=uuid.uuid4, unique=True, primary_key=True, editable=False)
+    
+    
+    class Meta:
+        unique_together = [['owner', 'project']]
+        verbose_name_plural = 'Reviews'
+    
+    
+    def __str__(self):
+        return self.value
 
+    
 class Tag(models.Model):
     owner = models.ForeignKey(Profile, null=True, blank=True, on_delete=models.CASCADE)
     name = models.CharField(max_length=255, null=True, blank=True)

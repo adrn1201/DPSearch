@@ -1,7 +1,7 @@
 from django.shortcuts import render, get_object_or_404, redirect
 from django.contrib.auth.decorators import login_required
 from .models import Project
-from .forms import ProjectForm
+from .forms import ProjectForm, ReviewForm
 
 
 def index(request):
@@ -12,7 +12,21 @@ def index(request):
 
 def show_project(request, slug):
     project = get_object_or_404(Project, slug=slug)
-    context = {"project":project}
+    form = ReviewForm()
+    
+    if request.method == "POST":
+        form = ReviewForm(request.POST)
+        if form.is_valid():
+            review = form.save(commit=False)
+            review.project = project
+            review.owner = request.user.profile
+            review.save()
+            
+            project.get_vote_count
+            if project.slug != slug:
+                return redirect('show_project', slug=project.slug)
+        
+    context = {"project":project, "form":form}
     return render(request, "projects/project_detail.html", context)
 
 
