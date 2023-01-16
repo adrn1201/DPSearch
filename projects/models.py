@@ -20,15 +20,20 @@ class Project(models.Model):
     
     class Meta:
         verbose_name_plural = 'Projects'
+        ordering = ['-vote_ratio', '-vote_total', 'title']
+       
         
     def __str__(self):
         return self.title
     
+    
     def get_absolute_url(self):
         return reverse("project-detail", args=[self.slug])
     
+    
     def get_edit_url(self):
         return reverse("update-project", args=[self.slug])
+    
     
     def get_delete_url(self):
         return reverse("delete-project", args=[self.slug])

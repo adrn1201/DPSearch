@@ -5,7 +5,7 @@ from django.contrib import messages
 from django.contrib.auth.models import User
 from .models import Profile
 
-from .forms import CustomUserCreationForm, ProfileForm, SkillForm
+from .forms import CustomUserCreationForm, ProfileForm, SkillForm, MessageForm
 
 
 def login_user(request):
@@ -26,7 +26,6 @@ def login_user(request):
         
         if user:
             login(request, user)
-            print(request.GET)
             return redirect(request.GET['next'] if 'next' in request.GET else 'account')
         else:
             pass
@@ -149,5 +148,42 @@ def delete_skill(request, pk):
     
     context = {"object":skill}
     return render(request, "delete_template.html", context)
+
+
+@login_required(login_url='login')
+def show_inbox(request):
+    profile = request.user.profile
+    messages = profile.messages.all()
+    unread_count = profile.messages.filter(is_read=False).count()
+    
+    context = {"messages":messages, "unread_count":unread_count}     
+    return render(request, "users/inbox.html", context)  
+
+
+@login_required(login_url='login')
+def create_message(request, pk):
+    recipient = Profile.objects.get(id=pk)
+    form = MessageForm()
+    
+    try:
+        sender = request.user.profile
+    except:
+        sender = None
+        
+    if request.method == "POST":
+        form = MessageForm(request.POST)
+        if form.is_valid():
+            message = form.save(commit=False)
+            message.sender = sender 
+            message.recipient = recipient
             
+            if sender:
+                message.name = sender.get_name
+                message.email = sender.email
+            
+            message.save()
+            return redirect('user-profile', slug=recipient.slug)
+
+    context = {"form": form, "recipient":recipient}
+    return render(request, "users/message_form.html", context) 
     
