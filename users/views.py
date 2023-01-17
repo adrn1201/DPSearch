@@ -161,6 +161,19 @@ def show_inbox(request):
 
 
 @login_required(login_url='login')
+def view_message(request, pk):
+    profile = request.user.profile
+    message = profile.messages.get(id=pk)
+    
+    if not message.is_read:
+        message.is_read = True
+        message.save()
+        
+    context = {"message":message}
+    return render(request, "users/message.html", context)
+
+
+@login_required(login_url='login')
 def create_message(request, pk):
     recipient = Profile.objects.get(id=pk)
     form = MessageForm()
