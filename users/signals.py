@@ -47,4 +47,15 @@ def create_profile(sender, instance, created, *args, **kwargs):
         if not profile.slug:
             profile.slug = unique_slug_generator(profile) 
             profile.save()
+        
+        subject = 'Welcome to DPSearch'
+        message = 'Start sharing your skills to other developers!'
+        
+        send_mail(
+            subject,
+            message,
+            settings.EMAIL_HOST_USER,
+            [profile.email],
+            fail_silently=False,
+        )
 
