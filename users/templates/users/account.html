@@ -88,10 +88,10 @@
           {% for project in projects %}
           <tr>
             <td class="settings__thumbnail">
-              <a href="single-project.html"><img src="{{ project.image_url }}" alt="Project Thumbnail" /></a>
+              <a href="{{ project.get_absolute_url }}"><img src="{{ project.image_url }}" alt="Project Thumbnail" /></a>
             </td>
             <td class="settings__tableInfo">
-              <a href="single-project.html">{{ project.title }}</a>
+              <a href="{{ project.get_absolute_url }}">{{ project.title }}</a>
               <p>
                 {{ project.description|slice:"150"}}
               </p>
