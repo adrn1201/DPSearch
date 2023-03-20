@@ -1,5 +1,5 @@
 {% extends 'main.html' %}
-
+{% load static %}
 {% block title %}
 {% if page %}
 Register
@@ -53,7 +53,7 @@ Login
     <div class="card">
         <div class="auth__header text-center">
             <a href="/">
-                <img src="images/icon.svg" alt="icon" />
+                <img src="{% static 'images/icon.png' %}" alt="icon" />
             </a>
             <h3>Account Login</h3>
             <p>Hello Developer, Welcome Back!</p>
