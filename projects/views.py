@@ -1,5 +1,6 @@
 from django.shortcuts import render, get_object_or_404, redirect
 from django.contrib.auth.decorators import login_required
+from django.contrib import messages
 from .models import Project, Tag
 from .forms import ProjectForm, ReviewForm
 from .utils import search_projects, paginate_projects
@@ -26,6 +27,7 @@ def show_project(request, slug):
             
             project.get_vote_count
             if project.slug != slug:
+                messages.success(request, 'Your review was successfully submitted!')
                 return redirect('show_project', slug=project.slug)
         
     context = {"project":project, "form":form}
@@ -48,7 +50,7 @@ def create_project(request):
                 tag, created = Tag.objects.get_or_create(name=tag)
                 tag.owner = profile
                 project.tags.add(tag)
-            
+            messages.success(request, 'Your project was successfully created!')
             return redirect("account")
     
     context = {"form": form}  
@@ -69,6 +71,7 @@ def update_project(request, slug):
             for tag in new_tags:
                 tag, created = Tag.objects.get_or_create(name=tag)
                 project.tags.add(tag)
+            messages.success(request, 'Your project was successfully updated!')
             return redirect("account")
         
     context = {"form":form, "project": project}
@@ -82,7 +85,8 @@ def delete_project(request, slug):
     
     if request.method == "POST":
         project.delete()
-        return redirect("projects")
+        messages.success(request, 'Your project was successfully deleted!')
+        return redirect("account")
     
     context = {"object": project}
     return render(request, "delete_template.html", context)

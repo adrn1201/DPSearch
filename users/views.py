@@ -21,7 +21,7 @@ def login_user(request):
         try:
             user = User.objects.get(username=username)
         except:
-            pass
+            messages.error(request, 'Username does not exist')
         
         user = authenticate(request, username=username, password=password)
         
@@ -29,7 +29,7 @@ def login_user(request):
             login(request, user)
             return redirect(request.GET['next'] if 'next' in request.GET else 'account')
         else:
-            pass
+            messages.error(request, 'Username OR Password is incorrect')
         
     return render(request, "users/login_register.html")
 
@@ -52,10 +52,11 @@ def register_user(request):
             user.save()
             
             login(request, user)
-            
+            messages.success(request, 'Successfully Registered Account!')
             return redirect('edit-account')
         else:
-            pass
+            messages.error(
+                request, 'An error has occurred during registration!')
     
     context = {"page": page, "form" : form}
     return render(request, "users/login_register.html", context)
@@ -98,6 +99,7 @@ def edit_account(request):
         form = ProfileForm(request.POST, request.FILES, instance=profile)
         if form.is_valid():
             form.save()
+            messages.success(request, 'Account was updated successfully!')
             return redirect('account')
     
     context = {"form": form}
@@ -115,7 +117,7 @@ def create_skill(request):
             skill = form.save(commit=False)
             skill.owner = profile
             skill.save()
-            
+            messages.success(request, 'Skill was added successfully!')
             return redirect('account')
     
     context = {"form":form}
@@ -132,7 +134,7 @@ def edit_skill(request, pk):
         form = SkillForm(request.POST, instance=skill)
         if form.is_valid():
             form.save()
-            
+            messages.success(request, 'Skill was updated successfully!')
             return redirect('account')
     
     context = {"form": form}
@@ -146,6 +148,7 @@ def delete_skill(request, pk):
     
     if request.method == "POST":
         skill.delete()
+        messages.success(request, 'Skill was deleted successfully!')
         return redirect('account')
     
     context = {"object":skill}
@@ -197,6 +200,7 @@ def create_message(request, pk):
                 message.email = sender.email
             
             message.save()
+            messages.success(request, 'Your message was successfully sent!')
             return redirect('user-profile', slug=recipient.slug)
 
     context = {"form": form, "recipient":recipient}

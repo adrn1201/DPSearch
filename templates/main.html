@@ -22,6 +22,18 @@
 
     {% include 'navbar.html' %}
 
+    {% if messages %}
+
+        {% for message in messages %}
+            <div style="display: flex; justify-content: center; margin-top:10px;">
+                <div class="alert alert--{{message.tags}}">
+                    <p class="alert__message">{{message}}</p>
+                    <button class="alert__close">x</button>
+                </div>
+            </div>
+        {% endfor %}
+
+    {% endif %}
     {% block content %}
     
     
