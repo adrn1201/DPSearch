@@ -7,7 +7,7 @@ from .utils import search_projects, paginate_projects
 
 def index(request):
     projects, search_query = search_projects(request) 
-    custom_range, projects = paginate_projects(request, projects, 1)
+    custom_range, projects = paginate_projects(request, projects, 9)
     context = {'projects': projects, 'search_query':search_query, 'custom_range':custom_range}
     return render(request, "projects/index.html", context)
 
@@ -69,7 +69,7 @@ def update_project(request, slug):
             for tag in new_tags:
                 tag, created = Tag.objects.get_or_create(name=tag)
                 project.tags.add(tag)
-            return redirect("projects")
+            return redirect("account")
         
     context = {"form":form, "project": project}
     return render(request, "projects/project_form.html", context)

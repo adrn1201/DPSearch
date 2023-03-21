@@ -52,7 +52,7 @@ def project_vote(request, pk):
     return Response(serializer.data)
 
 
-@api_view(['DELETE'])
+@api_view(['POST'])
 def remove_tag(request):
     tag_id = request.data['tag']
     project_id = request.data['project']
