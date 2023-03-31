@@ -5,5 +5,5 @@
 
 
 
- DPSearch is a web application created using Django, Django Rest-Framework, JavaScript, and PostgreSQL. It allows users to explore a directory of registered developers and their projects, enabling them to communicate with one another. By perusing the projects developed by other individuals, users can gain valuable insights and inspiration.
+ DPSearch is a web application created using Django, Django Rest-Framework, JavaScript, and PostgreSQL. It allows users to explore a directory of registered developers and their projects, enabling them to communicate with one another. By perusing the projects developed by other individuals, users can gain valuable insights and inspiration
 
